@@ -1,0 +1,20 @@
+{% extends 'base.html' %} 
+{% block content %}
+<br><br>
+<section class="sign">
+	<h1>Premeet</h1><br>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input name="name" type="text" placeholder="이름" required><br><br>
+        <input name="email" type="email" placeholder="이메일" required><br>
+        <input name="password" type="password" minlength="4" maxlength="14" placeholder="비밀번호 (4자리 이상)" required><br>
+        <input name="re-password" type="password" minlength="4" maxlength="14" placeholder="비밀번호 확인" required><br><br>
+        <span>{{error}}</span><br>
+        <input type="submit" value="회원가입"><br>
+    </form>
+	<div class="sign-script">
+		<p>이미 아이디가 있으신가요?</p>
+		<a href="{%url 'signin'%}">로그인</a>
+	</div>
+</section>
+{% endblock %}

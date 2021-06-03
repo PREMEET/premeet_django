@@ -1,0 +1,18 @@
+{% extends 'base.html' %} 
+{% block content %}
+<section class="sign">
+	<h1>Premeet</h1><br><br>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <br>
+        <input name="email" type="email" placeholder="이메일" required><br><br>
+        <input name="password" type="password" placeholder="비밀번호" required><br><br>
+        <span>{{error}}</span><br>
+        <input type="submit" value="로그인">
+    </form>
+    <div class="sign-script">
+		<p>아직 Premeet의 회원이 아니신가요?</p>
+		<a href="{%url 'signup'%}">회원가입</a>
+	</div>
+</section>
+{% endblock %}

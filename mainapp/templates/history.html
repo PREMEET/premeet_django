@@ -1,0 +1,13 @@
+{% extends 'base.html' %} 
+{% block content %}
+{% if request.session.user %}
+
+{% for it in interviews.all %}
+<a href = "{%url 'result' it.id %}"><h3>{{it.created_at}}</h3></a>
+{% endfor %}
+
+{% else %}
+<br><br>
+<h1>로그인을 해주세요</h1>
+{% endif %}
+{% endblock %}

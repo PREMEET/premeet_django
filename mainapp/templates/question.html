@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if request.session.user %}
+<style>
+	.sel_container {
+		display: flex;
+		justify-content: space-around;
+		height: 70vh;
+		overflow-y: hidden;
+		border: 1px solid black;
+	}
+
+	.ques_box {
+		display: flex;
+		flex-flow: column nowrap;
+		width: 100%;
+		height: 100%;
+		font-size: 1.3rem;
+		overflow-y: scroll;
+	}
+
+	.ques_box:nth-child(2) {
+		background-color: rgb(238, 238, 238);
+	}
+
+	.ques_box:nth-child(3) {
+		background-color: rgb(215, 215, 215);
+	}
+
+	.res_container {
+		display: flex;
+		flex-flow: column;
+		text-align: center;
+	}
+
+	.res_container>div {
+		font-size: 1.6rem;
+	}
+	.ques_select{
+		display:none;
+	}
+</style>
+<div id="question-select" data-ct="0" data-subct="0" data-ques="0" style="display:none"></div>
+<h2>질문 선택</h2>
+<div class="sel_container">
+	<div class="ques_box js-category">
+		{% for cg in category.all %}
+		<div class="btn js-btn" data-id="{{cg.name}}">{{cg.name}}</div>
+		{% endfor %}
+	</div>
+	<div class="ques_box js-sub_category">
+		{% for sub_cg in sub_category.all %}
+		<div class="ques_select btn js-btn" data-id="{{sub_cg.name}}" data-ct="{{sub_cg.category_id}}">{{sub_cg.name}}</div>
+		{% endfor %}
+	</div>
+	<div class="ques_box js-question">
+		{% for ques in question.all %}
+		<div class="ques_select btn js-btn" data-id="{{ques.id}}" data-ct="{{ques.subcategory_id}}">{{ques.title}}</div>
+		{% endfor %}
+	</div>
+</div>
+<br><br>
+<h2>선택한 질문</h2>
+<br>
+<div class="res_container">
+	<div id="sel_box"></div>
+	<br><br>
+	<form method="post" action="{% url 'create_result' %}">
+		{% csrf_token %}
+		<input id="question_num" type="hidden" name="question_num" value="0">
+		<span><button class="btn js-btn" onclick="post_interview()">면접 시작</button></span>
+	</form>
+</div>
+<script>
+	// 이건 잠깐 안쓸거임
+	// const btn = document.querySelectorAll('.js-btn');
+	//이것도
+	// btn.forEach(item => item.addEventListener('click',function(){}));
+	function post_interview() {
+		const questions = document.querySelectorAll('.js-res');
+		const post_form = document.querySelector('form');
+		document.getElementById('question_num').setAttribute('value',String(questions.length));
+		for (i = 0; i < questions.length; i++) {
+			let name = 'result' + String(i);
+			let hiddenField = document.createElement('input');
+			hiddenField.setAttribute('type','hidden');
+			hiddenField.setAttribute('name', name);
+			hiddenField.setAttribute('value', questions[i].dataset.id);
+			post_form.appendChild(hiddenField);
+		}
+		// post_form.submit();
+	}
+
+	function clickCategory(event) {
+		const select_box = document.getElementById('sel_box');
+		const click = event.target;
+		const click_id = click.dataset.id;
+		const category = document.querySelector('.js-category').querySelectorAll('.js-btn');
+		const sub_category = document.querySelector('.js-sub_category').querySelectorAll('.js-btn');
+		const question = document.querySelector('.js-question').querySelectorAll('.js-btn');
+
+		if (click_id != undefined) {
+			if (this.classList.contains('js-category')) {
+				category.forEach(item => item.classList.remove('click'));
+				question.forEach((item) => {item.style.display="none"})
+				sub_category.forEach((item) => {
+					if (item.dataset.ct === click_id )
+						item.style.display = "block";
+					else
+						item.style.display = "none";
+				});
+				click.classList.add('click');
+			} else if (this.classList.contains('js-sub_category')) {
+				sub_category.forEach(item => item.classList.remove('click'));
+				question.forEach((item) => {
+					console.log(item.dataset);
+					if (item.dataset.ct === click_id)
+						item.style.display = "block";
+					else
+						item.style.display = "none";
+				});
+				click.classList.add('click');
+			} else if (this.classList.contains('js-question')) {
+				if (!click.classList.contains('click')) {
+					const res = document.createElement("div");
+					const click_text = click.innerText;
+					res.innerText = click_text;
+					res.dataset.id = click_id;
+					res.classList.add('btn');
+					res.classList.add('js-res');
+					select_box.appendChild(res);
+					click.classList.add('click');
+				}
+			}
+			// alert(this.classList);
+			// alert(click_id);
+		}
+	}
+
+	window.onload = () => {
+		const category = document.querySelector('.js-category');
+		const sub_category = document.querySelector('.js-sub_category');
+		const question = document.querySelector('.js-question');
+
+		category.addEventListener('click', function () {
+			const click = clickCategory.bind(this); //그냥 쓰면 event가 자동으로 매개변수로 가네
+			click(event);
+		});
+		sub_category.addEventListener('click', function () {
+			const click = clickCategory.bind(this);
+			click(event);
+		});
+		question.addEventListener('click', function () {
+			const click = clickCategory.bind(this);
+			click(event);
+		});
+	}
+</script>
+{% else %}
+<br><br>
+<h1>로그인을 해주세요</h1>
+{% endif %}
+{% endblock %}

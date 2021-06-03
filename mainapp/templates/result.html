@@ -1,0 +1,33 @@
+{% extends 'base.html' %} 
+{% block content %}
+{% if request.session.user %}
+<br>
+<h1>이곳은 결과페이지</h1>
+<br><br><br>
+{% for res in results.all %}
+	<h2>{{forloop.counter}}번째 질문</h2><br>
+	<span>질문 : {{res.question_id}}</span><br>
+	<span>영상링크 : {{res.video_url}}</span><br>
+	<br>
+	<span>위쪽시간 : {{res.top_time}}</span><br>
+	<span>아래쪽시간 : {{res.bottom_time}}</span><br>
+	<span>왼쪽시간 : {{res.left_time}}</span><br>
+	<span>오른쪽시간 : {{res.right_time}}</span><br>
+	<br>
+	<span>긍정표정시간 : {{res.positive_time}}</span><br>
+	<span>평범표정시간 : {{res.normal_time}}</span><br>
+	<span>부정표정시간 : {{res.negative_time}}</span><br>
+	<br>
+	<span>내가 말한 문장 : {{res.result_text}}</span><br>
+	<span>음 횟수 : {{res.um_count}}</span><br>
+	<span>그 횟수 : {{res.geu_count}}</span><br>
+	<span>어 횟수 : {{res.eo_count}}</span><br>
+	<br><br>
+{% endfor %}
+
+{% else %}
+<br><br>
+<h1>로그인을 해주세요</h1>
+{% endif %}
+
+{% endblock %}

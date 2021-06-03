@@ -1,0 +1,25 @@
+{% extends 'base.html' %} 
+{% block content %}
+{% load static %}
+<section class="home">
+	<div class="imgbox">
+		<img src="{% static 'img/mainimg.png' %}" alt="img">
+		<div class="background-blur"></div>
+	</div>
+	<div class="contentbox">
+		<br>
+		<p>오랜 경력단절 끝에 힘들게 도전한 취업! <br>
+			자격증도 따고 열심히 교육도 받아 서류는 통과했는데..</p><br>
+		<h2>마지막 <span class="highlight">면접 준비</span>는 어떻게 해야할까?</h2><br>
+		<p><span class="highlight"><strong>premeet</strong></span>에서 주어지는 예상 질문 리스트를 통해 대비하고,<br>
+			<span class="highlight"><strong>모의면접</strong></span>을 통해 나의 안 좋은 습관 및 표정을 객관적으로 확인해보자!</p>
+		<br>
+		<span>원활한 서비스 사용을 위해 <span class="highlight">최신 웹 브라우저인 크롬</span> 사용을 권장합니다.</span>
+		<br><br>
+		<a href="{% url 'question'%}"><button class="btn">면접 보기</button></a>
+		<br>
+	</div>
+</section>
+{% endblock %}
+
+

@@ -1,0 +1,62 @@
+:root{
+	--color-main:#3169AF;
+	--color-main-hover:#5780b3;
+	--color-dark:#424142;
+}
+
+.sign{
+    text-align: center;
+    padding: 50px 0px;
+}
+
+.sign h1{
+	font-size: 3.6rem;
+}
+
+.sign input {
+    width: 350px;
+    height: 50px;
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 5px 0px;
+    border: 1px solid #f0f0f0;
+}
+.sign select{
+    width: 375px;
+    height: 50px;
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 5px 0px 30px;
+    border: 1px solid #f0f0f0;
+}
+.sign input[type=submit]{
+    font-weight: 900;
+    color: #ffffff;
+    background-color: var(--color-main);
+    margin-bottom: 30px;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+}
+
+.sign input[type=submit]:hover{
+    background-color: var(--color-main-hover);
+}
+
+.sign-script p{
+    color: var(--color-main);
+    text-decoration: none;
+	font-size: 1.4rem;
+	margin-bottom: 1rem;
+}
+
+.sign-script a{
+    font-weight: 900;
+    font-size: 1.8rem;
+	text-decoration: none;
+    color: var(--color-main);
+}
+
+.sign-script a:hover{
+    color: var(--color-main-hover);
+}
+
