@@ -34,7 +34,7 @@ urlpatterns = [
     path('question', mainapp.views.question, name="question"),
     path('temp', mainapp.views.temp, name="temp"),
     path('create_result', mainapp.views.create_result, name="create_result"),
-    path('upload_video', mainapp.views.upload_video, name="upload_video"),
+    path('next_question/<int:res_id>', mainapp.views.next_question, name="next_question"),
     path('add_all_data', mainapp.question.add_all_data, name="add_all_data"),
     # path('voice', mainapp.voice.main, name="voice"),
 ]

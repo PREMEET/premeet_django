@@ -6,8 +6,10 @@
 <br><br><br>
 {% for res in results.all %}
 	<h2>{{forloop.counter}}번째 질문</h2><br>
+	{{res.id}}
 	<span>질문 : {{res.question_id}}</span><br>
-	<span>영상링크 : {{res.video_url}}</span><br>
+	<video src="/{{res.video_url}}" controls width="700px" heihgt="500px"></video>
+	<span>{{res.video_url}}</span><br>
 	<br>
 	<span>위쪽시간 : {{res.top_time}}</span><br>
 	<span>아래쪽시간 : {{res.bottom_time}}</span><br>

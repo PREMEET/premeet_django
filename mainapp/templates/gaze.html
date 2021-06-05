@@ -6,164 +6,7 @@
 	<meta charset="UTF-8">
 	<title>Title</title>
 	<link rel="stylesheet" href="{% static 'css/base.css'%}" />
-	<style>
-		body {
-			background-color: white;
-		}
-
-		.background {
-			position: relative;
-			background: radial-gradient(ellipse at center, rgba(255, 254, 234, 1) 0%, rgba(255, 254, 234, 1) 35%, #B7E8EB 100%);
-			width: 100vw;
-			height: 100vh;
-		}
-
-		section.alertpage {
-			overflow: hidden;
-			z-index: 5;
-		}
-
-		section.loadpage {
-			z-index: 3;
-		}
-
-		section.interviewpage {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-		}
-
-		.ocean {
-			height: 5%;
-			width: 100%;
-			position: absolute;
-			z-index: 3;
-			bottom: 0;
-			left: 0;
-			background: #015871;
-		}
-
-		.wave {
-			background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
-			position: absolute;
-			top: -198px;
-			width: 6400px;
-			height: 198px;
-			animation: wave 3s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
-			transform: translate3d(0, 0, 0);
-		}
-
-		.wave:nth-of-type(2) {
-			top: -175px;
-			animation: wave 3s cubic-bezier(0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 7s ease -1.25s infinite;
-			opacity: 1;
-		}
-
-		@keyframes wave {
-			0% {
-				margin-left: 0;
-			}
-
-			100% {
-				margin-left: -1600px;
-			}
-		}
-
-		@keyframes swell {
-
-			0%,
-			100% {
-				transform: translate3d(0, -25px, 0);
-			}
-
-			50% {
-				transform: translate3d(0, 5px, 0);
-			}
-		}
-
-		.loader {
-			position: absolute;
-			transform: translate(-50%, -50%);
-			top: 50%;
-			left: 50%;
-		}
-
-		.loader>.circle {
-			width: 60px;
-			height: 60px;
-			border: 0.8rem solid #0088ad41;
-			border-radius: 50%;
-			border-top: 0.8rem solid #015871;
-			animation: spin 1s linear infinite;
-		}
-
-		@keyframes spin {
-			0% {
-				transform: rotate(0deg);
-			}
-
-			100% {
-				transform: rotate(360deg);
-			}
-		}
-
-		section.alertpage {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: space-around;
-		}
-
-		.alertpage>h2 {
-			font-size: 1.8rem;
-			text-align: center;
-			color: rgb(65, 65, 65);
-		}
-
-		.alert_container {
-			display: flex;
-			z-index: 4;
-			width: 90%;
-			max-width: 1100px;
-			justify-content: space-between;
-		}
-
-		.alert_box {
-			background-color: rgba(1, 1, 1, 0.7);
-			height: 60vh;
-			width: 32%;
-		}
-
-		.alertpage>.btn {
-			z-index: 4;
-			font-size: 1.4em;
-		}
-
-		.interviewpage .btn {
-			position: fixed;
-			bottom: 3rem;
-			left: 50%;
-			transform: translate(-50%, 0);
-		}
-
-		.interviewpage span.question {
-			font-size: 2.1rem;
-		}
-
-		.ques_alert_container {
-			position: fixed;
-			padding: 2rem;
-			bottom: 0;
-			left: 0;
-			background-color: white;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-content: center;
-			font-size: 2.8rem;
-		}
-	</style>
+	<link rel="stylesheet" href="{% static 'css/gaze.css'%}" />
 </head>
 
 <body>
@@ -187,37 +30,62 @@
 	</section>
 	<section class="interviewpage background">
 		{% for res in results.all %}
-		<span class="question">{{res.question_id}}</span>
+		<div class="question" data-id="{{res.id}}" style="display:none">
+			<span>{{forloop.counter}} / {{result_num}} 번째 질문</span><br>
+			<span>{{res.question_id}}</span>
+		</div>
 		{% endfor %}
 		<div class="ques_alert_container">
 			<div><span id="ques_alert" style="color:red;"></span></div>
 			<div>x좌표 : <span id="ques_x"></span></div>
 			<div>y좌표 : <span id="ques_y"></span></div>
-			<div id="label-container"></div>
 		</div>
 
-		<button class="btn" onclick="locate()">다음 질문</button>
+		<button class="btn" onclick="nextQuestion()">다음 질문</button>
 		
 	</section>
+	<script type="text/JavaScript" src="http://code.jquery.com/jquery-1.7.min.js"></script>
 	<script src="{% static 'js/webgazer.js' %}" defer></script>
-	<script src="{% static 'js/sketch.js' %}" type="text/javascript" defer></script>
-	
-	
+	<script src="{% static 'js/gaze.js' %}" type="text/javascript" defer></script>
 	<script>
+		let num = 0;
+		const questions = document.querySelectorAll('div.question');
+		const question_num = Number("{{result_num}}");
+
 		function locate() {
 			const url = "{% url 'result' itv_id %}";
 			parent.document.location.href = url;
 		}
 
-		function closeFullScreenMode() {
-			if (parent.document.exitFullscreen)
-				parent.document.exitFullscreen();
-			else if (parent.document.webkitExitFullscreen)
-				parent.document.webkitExitFullscreen();
-			else if (parent.document.mozCancelFullScreen)
-				parent.document.mozCancelFullScreen();
-			else if (parent.document.msExitFullscreen)
-				parent.document.msExitFullscreen();
+		function nextQuestion() {	
+			stopRecording();
+			document.querySelector('.loadpage').style.display = "block";
+			window.setTimeout(function () {
+				downloadRecord(questions[num].dataset.id);
+				console.log(questions[num].dataset.id);
+				if (num + 1 < question_num){	
+					window.setTimeout(function () {
+						document.querySelector('.loadpage').style.display = "none";
+						startRecording();
+						num += 1;
+						questions.forEach((question)=>{question.style.display="none";})
+						questions[num].style.display="block";
+					}, 2000);
+				}
+				else{
+					window.setTimeout(function () {
+						locate();
+					}, 5000);
+				}
+			}, 1000);
+			// if (parent.document.exitFullscreen)
+			// 	parent.document.exitFullscreen();
+			// else if (parent.document.webkitExitFullscreen)
+			// 	parent.document.webkitExitFullscreen();
+			// else if (parent.document.mozCancelFullScreen)
+			// 	parent.document.mozCancelFullScreen();
+			// else if (parent.document.msExitFullscreen)
+			// 	parent.document.msExitFullscreen();
 		}
 
 		function closeAlert() {
@@ -226,7 +94,9 @@
 			startGazing();
 			window.setTimeout(function () {
 				loader.style.display = "none";
-			}, 3000);
+				startRecording();
+				questions[num].style.display="block";
+			}, 5000);
 			return;
 		}
 	</script>

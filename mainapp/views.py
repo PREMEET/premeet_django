@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import make_password,check_password
 from .models import *
 from django.http import HttpResponse, JsonResponse
+import os
+from pydub import AudioSegment
+from pydub.utils import make_chunks
 
 # Create your views here.
 def home(request):
@@ -21,6 +24,7 @@ def gaze(request, itv_id):
 		interview = get_object_or_404(Interview, id=itv_id)
 		results = Result.objects.filter(interview_id=interview)
 		res_data['results'] = results
+		res_data['result_num'] = len(results)
 	except:
 		redirect('home')
 	return render(request, "gaze.html", res_data)
@@ -131,10 +135,37 @@ def create_result(request):
 	return redirect('question')
 
 
-def upload_video(request):
-	file = request.FILES['file']
-	file_name = "hi.webm"
-	with open(file_name, 'wb+') as f:
+
+##업로드비디오
+
+def extract_audio(video_url):
+	audioSegment = AudioSegment.from_file(video_url, 'webm')
+	audio_url = video_url.replace('webm', 'wav').replace('video','voice')
+	audioSegment.export(audio_url, format='wav')
+	return audio_url
+
+def upload_video(file, file_name):
+	video_url = f"data/webm/{file_name}.webm"
+	with open(video_url, 'wb+') as f:
 		for chunk in file.chunks():
 			f.write(chunk)
+	return video_url
+	
+#비디오 업로드, 오디오 추출, 추출한 오디오 모델에 돌리기
+def next_question(request, res_id):
+	file_name = "video"+str(res_id)
+	#비디오 업로드
+	video_url = upload_video(request.FILES['file'], file_name)
+
+	#오디오 추출
+	audio_url = extract_audio(video_url)
+
+	#추출한 오디오 모델에 돌리기(아직)
+
+	#해당하는 result객체 가져와서 거기에 저장
+	result = get_object_or_404(Result, id=res_id)
+	result.video_url = video_url
+	result.save()
+	print(res_id)
+	
 	return HttpResponse(status=200)

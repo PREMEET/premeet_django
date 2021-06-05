@@ -113,7 +113,6 @@
 			} else if (this.classList.contains('js-sub_category')) {
 				sub_category.forEach(item => item.classList.remove('click'));
 				question.forEach((item) => {
-					console.log(item.dataset);
 					if (item.dataset.ct === click_id)
 						item.style.display = "block";
 					else

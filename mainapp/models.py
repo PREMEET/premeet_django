@@ -60,7 +60,6 @@ class Result(models.Model):
     interview_id = models.ForeignKey(Interview, on_delete=models.CASCADE, null=True)
     question_id = models.ForeignKey(Question, on_delete=models.SET_NULL, null=True, blank=True)
     video_url = models.CharField(max_length=200, verbose_name='영상 주소', null=True, blank=True)
-    eye_tracking_image_url = models.CharField(max_length=200, verbose_name='이미지 주소', null=True, blank=True)
     result_text = models.CharField(max_length=2000, verbose_name='결과 멘트', null=True, blank=True)
     left_time = models.IntegerField(default=0)
     right_time = models.IntegerField(default=0)

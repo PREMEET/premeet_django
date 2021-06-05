@@ -1,18 +1,3 @@
-/*
-*  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
-*
-*  Use of this source code is governed by a BSD-style license
-*  that can be found in the LICENSE file in the root of the source
-*  tree.
-*/
-
-// This code is adapted from
-// https://rawgit.com/Miguelao/demos/master/mediarecorder.html
-
-'use strict';
-
-/* globals MediaRecorder */
-
 let mediaRecorder;
 let recordedBlobs;
 
@@ -44,15 +29,10 @@ const downloadButton = document.querySelector('button#download');
 downloadButton.addEventListener('click', () => {
   const blob = new Blob(recordedBlobs, {type: 'video/webm'});
   const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.style.display = 'none';
-  a.href = url;
   // a.download = 'test.webm';
-  document.body.appendChild(a);
   uploadToServer(blob);
   // a.click();
   setTimeout(() => {
-    document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   }, 100);
 });
@@ -62,7 +42,7 @@ function uploadToServer(blob) {
   fd.append('file', blob);
   console.log(blob);
   $.ajax({
-      url : "/upload_video",
+      url : "/next_question/1",
       type : "POST",
       data: fd,
       processData : false,
@@ -142,4 +122,3 @@ async function init(constraints) {
     errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
   }
 }
-
