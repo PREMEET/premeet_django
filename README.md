@@ -26,10 +26,20 @@ $ source myvenv/Scripts/activate
 $ pip install -r requirements.txt
 ```
 
-### 5.데이터베이스 생성 및 서버 실행
+### 5.음성 분석 모델 넣기
+
+구글 공유드라이브에 있는 four.h5, res50_60_2.h5 내려받아서
+data/model/ 폴더에 넣어두기
+
+### 6.데이터베이스 생성 및 서버 실행
 
 ```shell
 $ python manage.py makemigrations
 $ python manage.py migrate
 $ python manage.py runserver
 ```
+
+### 6.질문 데이터 추가
+
+url에 /add_all_data
+

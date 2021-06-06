@@ -65,6 +65,7 @@ function startGazing() {
 
 let mediaRecorder;
 let recordedBlobs;
+let flag = 1;
 
 function handleDataAvailable(event) {
     console.log('handleDataAvailable', event);
@@ -117,14 +118,22 @@ function stopRecording() {
 }
 
 function downloadRecord(id, final) {
-    const blob = new Blob(recordedBlobs, {
-        type: 'video/webm'
-    });
-    const url = window.URL.createObjectURL(blob);
-    uploadToServer(blob,id, final);
-    setTimeout(() => {
-        window.URL.revokeObjectURL(url);
-    }, 100);
+    if (flag > 0){
+        flag = 0;
+        const blob = new Blob(recordedBlobs, {
+            type: 'video/webm'
+        });
+        const url = window.URL.createObjectURL(blob);
+        uploadToServer(blob,id, final);
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+        }, 100);
+    }
+    else {
+        setTimeout(() => {
+            downloadRecord(id, final);
+        }, 1000);
+    }
 }
 
 function uploadToServer(blob,id, final) {
@@ -139,6 +148,10 @@ function uploadToServer(blob,id, final) {
             data: fd,
             processData: false,
             contentType: false,
+            success : function (response) {
+                console.log(response);
+                flag = 1;
+            },
             error: function (jqXHR, textStaut, errorMesssage) {
                 alert('Error' + JSON.stringify(errorMesssage));
             }
@@ -153,6 +166,7 @@ function uploadToServer(blob,id, final) {
             contentType: false,
             success : function (response) {
                 console.log(response);
+                flag = 1;
                 locate(final);
             },
             error: function (jqXHR, textStaut, errorMesssage) {

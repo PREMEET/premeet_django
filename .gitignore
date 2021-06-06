@@ -1,6 +1,5 @@
 venv/
 media/
-model/
 *.h5
 *.webm
 *.wav
