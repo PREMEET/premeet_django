@@ -5,6 +5,7 @@ const LOOK_DELAY = 300;
 let lookDirection = null;
 
 function startGazing() {
+    window.saveDataAcrossSessions = false;
     const TOP_CUTOFF = window.innerHeight / 4;
     const BOTTOM_CUTOFF = (window.innerHeight / 4) * 3;
     const LEFT_CUTOFF = window.innerWidth / 4;
@@ -53,7 +54,6 @@ function startGazing() {
         } else
             ques_alert.innerHTML = "";
     }).begin();
-    // webgazer.showVideoPreview(false).showPredictionPoints(false);
 }
 
 
@@ -68,6 +68,7 @@ function handleDataAvailable(event) {
     }
 }
 function startRecording() {
+    webgazer.showPredictionPoints(true);
     recordedBlobs = [];
     let options = {
         mimeType: 'video/webm;codecs=vp9,opus'
@@ -107,6 +108,7 @@ function startRecording() {
 
 function stopRecording() {
     mediaRecorder.stop();
+    webgazer.showPredictionPoints(false);
 }
 
 function downloadRecord(id) {

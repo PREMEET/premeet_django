@@ -167,5 +167,4 @@ def next_question(request, res_id):
 	result.video_url = video_url
 	result.save()
 	print(res_id)
-	
 	return HttpResponse(status=200)
