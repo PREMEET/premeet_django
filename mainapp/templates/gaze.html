@@ -52,18 +52,12 @@
 		const questions = document.querySelectorAll('div.question');
 		const question_num = Number("{{result_num}}");
 
-		function locate() {
-			const url = "{% url 'result' itv_id %}";
-			parent.document.location.href = url;
-		}
-
 		function nextQuestion() {	
 			stopRecording();
 			document.querySelector('.loadpage').style.display = "block";
 			window.setTimeout(function () {
-				downloadRecord(questions[num].dataset.id);
-				console.log(questions[num].dataset.id);
-				if (num + 1 < question_num){	
+				if (num + 1 < question_num){
+					downloadRecord(questions[num].dataset.id, "0");
 					window.setTimeout(function () {
 						document.querySelector('.loadpage').style.display = "none";
 						startRecording();
@@ -73,9 +67,10 @@
 					}, 2000);
 				}
 				else{
-					window.setTimeout(function () {
-						locate();
-					}, 5000);
+					downloadRecord(questions[num].dataset.id, "{{itv_id}}")
+					// window.setTimeout(function () {
+					// 	locate();
+					// }, 5000);
 				}
 			}, 1000);
 			// if (parent.document.exitFullscreen)

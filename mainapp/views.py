@@ -4,7 +4,7 @@ from .models import *
 from django.http import HttpResponse, JsonResponse
 import os
 from pydub import AudioSegment
-from pydub.utils import make_chunks
+from .voice import main
 
 # Create your views here.
 def home(request):
@@ -159,12 +159,20 @@ def next_question(request, res_id):
 
 	#오디오 추출
 	audio_url = extract_audio(video_url)
-
-	#추출한 오디오 모델에 돌리기(아직)
-
-	#해당하는 result객체 가져와서 거기에 저장
+	print(res_id)
+	print(audio_url)
+	print(res_id)
+	
 	result = get_object_or_404(Result, id=res_id)
+	#추출한 오디오 모델에 돌리기(아직)
+	result.result_text = ""
+	res_jsons = main(audio_url)
+	for res in res_jsons:
+		print(res)
+		result.result_text += str(res.get('content'))
+	#해당하는 result객체 가져와서 거기에 저장
+	
 	result.video_url = video_url
 	result.save()
-	print(res_id)
+	
 	return HttpResponse(status=200)

@@ -4,8 +4,13 @@ const ques_y = document.getElementById('ques_y');
 const LOOK_DELAY = 300;
 let lookDirection = null;
 
+function locate(res_id) {
+    console.log("jhih");
+    const url = "/result/"+res_id;
+    parent.document.location.href = url;
+}
+
 function startGazing() {
-    window.saveDataAcrossSessions = false;
     const TOP_CUTOFF = window.innerHeight / 4;
     const BOTTOM_CUTOFF = (window.innerHeight / 4) * 3;
     const LEFT_CUTOFF = window.innerWidth / 4;
@@ -111,30 +116,48 @@ function stopRecording() {
     webgazer.showPredictionPoints(false);
 }
 
-function downloadRecord(id) {
+function downloadRecord(id, final) {
     const blob = new Blob(recordedBlobs, {
         type: 'video/webm'
     });
     const url = window.URL.createObjectURL(blob);
-    uploadToServer(blob,id);
+    uploadToServer(blob,id, final);
     setTimeout(() => {
         window.URL.revokeObjectURL(url);
     }, 100);
 }
 
-function uploadToServer(blob,id) {
+function uploadToServer(blob,id, final) {
     let fd = new FormData(window.parent.document.getElementById("form"));
     fd.append('file', blob);
     fd.append('text', "hi");
     console.log(blob);
-    $.ajax({
-        url: "/next_question/"+id,
-        type: "POST",
-        data: fd,
-        processData: false,
-        contentType: false,
-        error: function (jqXHR, textStaut, errorMesssage) {
-            alert('Error' + JSON.stringify(errorMesssage));
-        }
-    });
+    if (final === "0"){
+        $.ajax({
+            url: "/next_question/"+id,
+            type: "POST",
+            data: fd,
+            processData: false,
+            contentType: false,
+            error: function (jqXHR, textStaut, errorMesssage) {
+                alert('Error' + JSON.stringify(errorMesssage));
+            }
+        });
+    }
+    else {
+        $.ajax({
+            url: "/next_question/"+id,
+            type: "POST",
+            data: fd,
+            processData: false,
+            contentType: false,
+            success : function (response) {
+                console.log(response);
+                locate(final);
+            },
+            error: function (jqXHR, textStaut, errorMesssage) {
+                alert('Error' + JSON.stringify(errorMesssage));
+            }
+        });
+    }
 }

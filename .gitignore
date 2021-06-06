@@ -1,8 +1,10 @@
 venv/
 media/
-webm/
-wav/
 model/
+*.h5
+*.webm
+*.wav
+*.mp3
 
 # Created by https://www.toptal.com/developers/gitignore/api/django
 # Edit at https://www.toptal.com/developers/gitignore?templates=django
