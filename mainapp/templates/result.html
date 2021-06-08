@@ -1,35 +1,100 @@
+
+
 {% extends 'base.html' %} 
 {% block content %}
 {% if request.session.user %}
-<br>
-<h1>이곳은 결과페이지</h1>
-<br><br><br>
-{% for res in results.all %}
-	<h2>{{forloop.counter}}번째 질문</h2><br>
-	<span>질문 : {{res.question_id}}</span><br>
-	<video src="/{{res.video_url}}" controls width="600px" heihgt="400px"></video>
-	<br>
-	<span style="font-size: 22px;">내가 말한 문장 : {{res.result_text}}</span><br>
-	<br>
-	<span>위쪽시간 : {{res.top_time}}</span><br>
-	<span>아래쪽시간 : {{res.bottom_time}}</span><br>
-	<span>왼쪽시간 : {{res.left_time}}</span><br>
-	<span>오른쪽시간 : {{res.right_time}}</span><br>
-	<br>
-	<span>긍정표정시간 : {{res.positive_time}}</span><br>
-	<span>평범표정시간 : {{res.normal_time}}</span><br>
-	<span>부정표정시간 : {{res.negative_time}}</span><br>
-	<span>음 횟수 : {{res.um_count}}</span><br>
-	<span>그 횟수 : {{res.geu_count}}</span><br>
-	<span>어 횟수 : {{res.eo_count}}</span><br>
-	<br>
-	
+{% load static %}
+<link rel="stylesheet" href="{%static 'css/result.css'%}"/>
+<section class="result">
 	<br><br>
+	<span style="margin:3rem;">{{interview.created_at}}</span>
+	<h2 class="res-header">최종 결과</h2>
+	<div class="res-box">
+		아직 여기에 뭐가 나올지는 안정했다.
+	</div>
+</section>
+<div class="js-wrapper"> 
+{% for res in results.all %}
+<section class="result js-resContainer">
+	<h2 class="result-header js-item toggle">질문 {{forloop.counter}} &nbsp;&nbsp; <span>{{res.question_id}}</span></h2><br>
+	<article class="result-article">
+		<h3 class="res-title">답변영상 분석</h3>
+		<div class="video_container res-box">
+			<video src="/{{res.video_url}}" controls></video>
+			<div class="text_box">
+				<span>{{res.result_text}}</span>
+				<span>{{res.silence_time}}</span>
+				<span class="total_count">총 {{res.total_count}}자</span>
+			</div>
+		</div>
+		<br/>
+		<h3 class="res-title">음성 분석</h3>
+		<div class="voice-box">
+			<div class="voice-box1 js-resBox">
+				<h4 class="voice-title">말하기 속도</h4>
+				<div class="voice-speech">
+					<span>1분당</span>
+					<span class="js-res" data-time="{{res.audio_length}}" data-count="{{res.total_count}}">{{res.total_count}}</span>
+				</div>
+			</div>
+			<div class="voice-box2 js-resBox">
+				<h4 class="voice-title">습관어 횟수</h4>
+				<div class="voice-graph">
+					<div class="js-res voice-data" data-time="{{res.um_count}}">
+						<span class="js-resCount"></span>
+						<span>음</span>
+					</div>
+					<div class="js-res voice-data" data-time="{{res.geu_count}}">
+						<span class="js-resCount"></span>
+						<span>그</span>
+					</div>
+					<div class="js-res voice-data" data-time="{{res.eo_count}}">
+						<span class="js-resCount"></span>
+						<span>어</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br/>
+		<h3 class="res-title">표정 분석</h3>
+		<div class="js-resBox face-box">
+			<div class="img-box">
+				<span class="img-span">긍정적</span>
+				<img src="{% static 'img/face-positive.png' %}" alt="img"/>	
+				<span class="js-res face-span" data-time="{{res.positive_time}}"></span>
+			</div>
+			<div class="img-box">
+				<span class="img-span">무표정</span>
+				<img src="{% static 'img/face-neutral.png' %}" alt="img"/>
+				<span class="js-res face-span" data-time="{{res.negative_time}}"></span>
+			</div>
+			
+		</div>
+		<br/>
+		<h3 class="res-title">시선 분석</h3>
+		<div class="res-box js-resBox gaze-box">
+			<span class="js-res gaze-span" data-time="{{res.top_time}}"></span>
+			<span class="js-res gaze-span" data-time="{{res.bottom_time}}"></span>
+			<span class="js-res gaze-span" data-time="{{res.left_time}}"></span>
+			<span class="js-res gaze-span" data-time="{{res.right_time}}"></span>
+			<span class="js-res gaze-span" data-time="{{res.normal_time}}"></span>
+			<div class="img-box">
+				<img src="{% static 'img/gaze-dash.png' %}" alt="img"/>	
+				<img src="{% static 'img/gaze-human.png' %}" alt="img"/>
+			</div>
+		</div>
+		<br/>
+	</article>
+</section>
 {% endfor %}
+</div>
+
 
 {% else %}
 <br><br>
 <h1>로그인을 해주세요</h1>
 {% endif %}
-
+<script type="text/JavaScript" src="{% static 'js/result.js'%}"></script>
+<script>
+</script>
 {% endblock %}

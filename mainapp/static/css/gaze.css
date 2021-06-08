@@ -7,11 +7,13 @@
 
 section.alertpage {
 	overflow: hidden;
-	z-index: 5;
+	color:white;
+	font-size: 1.5rem;
+	z-index: 100;
 }
 
 section.loadpage {
-	z-index: 3;
+	z-index: 50;
 }
 
 section.interviewpage {
@@ -21,85 +23,10 @@ section.interviewpage {
 	align-items: center;
 }
 
-.ocean {
-	height: 5%;
-	width: 100%;
-	position: absolute;
-	z-index: 3;
-	bottom: 0;
-	left: 0;
-	background: #015871;
-}
 
-.wave {
-	background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
-	position: absolute;
-	top: -198px;
-	width: 6400px;
-	height: 198px;
-	animation: wave 3s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
-	transform: translate3d(0, 0, 0);
-}
 
-.wave:nth-of-type(2) {
-	top: -175px;
-	animation: wave 3s cubic-bezier(0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 7s ease -1.25s infinite;
-	opacity: 1;
-}
 
-@keyframes wave {
-	0% {
-		margin-left: 0;
-	}
-
-	100% {
-		margin-left: -1600px;
-	}
-}
-
-@keyframes swell {
-
-	0%,
-	100% {
-		transform: translate3d(0, -25px, 0);
-	}
-
-	50% {
-		transform: translate3d(0, 5px, 0);
-	}
-}
-
-.loader {
-	position: absolute;
-	transform: translate(-50%, -50%);
-	top: 50%;
-	left: 50%;
-}
-
-.loader>.circle {
-	width: 60px;
-	height: 60px;
-	border: 0.6rem solid #0088ad41;
-	border-radius: 50%;
-	border-top: 0.6rem solid #015871;
-	animation: spin 1.4s ease infinite;
-}
-
-@keyframes spin {
-	0% {
-		transform: rotate(0deg);
-	}
-	10% {
-		transform: rotate(5deg);
-	}
-	90% {
-		transform: rotate(355deg);
-	}
-	100% {
-		transform: rotate(360deg);
-	}
-}
-
+/*alert page*/
 section.alertpage {
 	display: flex;
 	flex-direction: column;
@@ -115,32 +42,81 @@ section.alertpage {
 
 .alert_container {
 	display: flex;
-	z-index: 4;
+	z-index: 99;
 	width: 90%;
 	max-width: 1100px;
 	justify-content: space-between;
 }
-
 .alert_box {
+	padding:1rem;
 	background-color: rgba(1, 1, 1, 0.7);
 	height: 60vh;
 	width: 32%;
+	display:flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
-
+.alert_box > img{
+	align-self: center;
+}
+.alert_box:nth-child(1) > img{
+	width: 90%;
+}
+.alert_box:nth-child(2) > img{
+	width: 70%;
+}
+.alert_box:nth-child(3) > img{
+	width: 50%;
+}
+.alert_box > .phrase{
+	min-height: 30%;
+	padding: 1rem;
+	text-align: center;
+}
 .alertpage>.btn {
-	z-index: 4;
-	font-size: 1.4em;
+	z-index: 99;
+	font-size: 1.3em;
 }
 
+/*interviewpage*/
 .interviewpage .btn {
 	position: fixed;
 	bottom: 3rem;
 	left: 50%;
 	transform: translate(-50%, 0);
+	font-size: 1.8rem;
 }
 
-.interviewpage span{
-	font-size: 2.1rem;
+.rec{
+	position: fixed;
+	right:3rem;
+	top:3rem;
+	font-size: 2.8rem;
+	color:white;
+	font-weight: 700;
+}
+.rec::before{
+	content: "";
+	position:absolute;
+	background-color: red;
+	border-radius: 50%;
+	width:20px;
+	height:20px;
+	right:100%;
+	top:40%;
+	transform: translate(-50%,-50%);
+	animation: twinkle 1.5s steps(1) infinite;
+}
+@keyframes twinkle {
+	0%{
+		opacity: 0;
+	}
+	50%{
+		opacity: 1;
+	}
+	100%{
+		opacity: 0;
+	}
 }
 
 .ques_alert_container {

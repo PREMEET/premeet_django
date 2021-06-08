@@ -60,17 +60,20 @@ class Result(models.Model):
     interview_id = models.ForeignKey(Interview, on_delete=models.CASCADE, null=True)
     question_id = models.ForeignKey(Question, on_delete=models.SET_NULL, null=True, blank=True)
     video_url = models.CharField(max_length=200, verbose_name='영상 주소', null=True, blank=True)
+    audio_length = models.IntegerField(default=0)
+    silence_time = models.IntegerField(default=0)
     result_text = models.CharField(max_length=2000, verbose_name='결과 멘트', null=True, blank=True)
+    normal_time = models.IntegerField(default=0)
     left_time = models.IntegerField(default=0)
     right_time = models.IntegerField(default=0)
     top_time = models.IntegerField(default=0)
     bottom_time = models.IntegerField(default=0)
     positive_time = models.IntegerField(default=0)
-    normal_time = models.IntegerField(default=0)
-    negative_time = models.IntegerField(default=0)
+    neutral_time = models.IntegerField(default=0)
     um_count = models.IntegerField(default=0)
     geu_count = models.IntegerField(default=0)
     eo_count = models.IntegerField(default=0)
+    total_count = models.IntegerField(default=0)
     class Meta:
         db_table = 'RESULT'
         verbose_name = '결과'

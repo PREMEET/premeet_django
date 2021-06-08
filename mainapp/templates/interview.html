@@ -23,6 +23,7 @@
         }
 
         .btn-box {
+            z-index: 2;
             position: fixed;
             bottom: 3rem;
             right: 3rem;
@@ -43,8 +44,7 @@
             transform: translate(-50%, -50%);
             top: 50%;
             left: 50%;
-            --width: 100vw;
-            width: var(--width);
+            width: vmax;
             max-height: 100vh;
         }
 
@@ -63,29 +63,53 @@
         .wrap {
             width: 100%;
             height: 100vh;
-            background-color: #c7e0ff;
+            background-color: rgb(53, 53, 53);
         }
 
         .display_none {
             display: none;
         }
-        .ques_alert_container {
-            position: fixed;
-            padding: 2rem;
-            bottom: 0;
-            left: 0;
-            background-color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-content: center;
-            font-size: 2.8rem;
+        .cover{
+            position:absolute;
+            width:100%;
+            height: 100vh;
+            border-top:20vh solid black;
+            border-bottom:20vh solid black;
+            border-left:20vw solid black;
+            border-right: 20vw solid black;
+            opacity: 0.7;
+            z-index: 1;
         }
+        .cover-phrase{
+            transform: translate(-50%,-50%);
+            text-align: center;
+            color:white;
+            z-index: 5;
+            position:absolute;
+            left:50%;
+        }
+        h3.cover-phrase{
+            font-size: 2.1rem;
+            font-weight: 500;
+            top:15vh;
+        }
+        div.cover-phrase{
+            font-size: 1.2rem;
+            bottom:10vh;
+        }
+
     </style>
 </head>
 
 <body>
     <div class="wrap">
+        <h3 class="cover-phrase">카메라 상태를 점검해 주세요.</h3>
+        <div class="cover-phrase">
+                모든 면접은 녹화되며, 분석이 끝난 후 확인할 수 있습니다.<br>
+                보다 정확한 평가를 위해 얼굴이 중앙의 영역 안으로 오도록 조절해 주세요.
+        </div>
+        <div class="cover">
+        </div>
         <div id="container">
             <video id="gum" class="main-video" style="transform: scaleX(-1) translate(50%,-50%);" playsinline autoplay muted></video>
             <video id="recorded" class="sub1-video" playsinline loop></video>
@@ -95,6 +119,7 @@
                 <button class="btn display_none" id="play" data-btn="play" disabled>Play</button>
                 <button class="btn display_none" id="download" data-btn="play" disabled>Download</button>
             </div>
+            <div class="js-click" onclick="initface()"></div>
             <div>
                 <p style="display:none">Echo cancellation: <input type="checkbox" id="echoCancellation"></p>
                 <div>
@@ -108,9 +133,7 @@
                 {% csrf_token %}
             </form>
             <div id="webcam-container" style="visibility:hidden; position:absolute;"></div>
-            <div class="ques_alert_container">
-                <div id="label-container"></div>
-            </div>
+            <div id="webcam-click" onclick="loop();"></div>
         </div>
         <iframe id="gaze_page" src="{% url 'gaze' itv_id %}" width="0" height="0" allowfullscreen></iframe>
     </div>
@@ -143,9 +166,9 @@
                     height: 720
                 }
             };
+            document.querySelector('.js-click').click();
             console.log('Using media constraints:', constraints);
             await init(constraints);
-            initface();
         }
     </script>
 </body>

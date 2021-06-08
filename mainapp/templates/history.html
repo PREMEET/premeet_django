@@ -1,11 +1,48 @@
 {% extends 'base.html' %} 
 {% block content %}
+<style>
+	.history{
+		position: relative;
+		background-color: #f5f5f9;
+		border-radius: 5px;
+		box-shadow: 0 2px 5px 1px #e4e4e4;
+		margin-bottom:2rem;
+		overflow: hidden;
+	}
+	.his-title{
+		text-align: center; 
+		margin-top: 1rem;
+		padding:1rem; 
+		font-size:1.5rem;
+	}
+	.his-box{
+		margin:1.5rem auto;
+		width:95%;
+		background-color: white;
+		border-radius: 5px;
+		box-shadow: 0 2px 5px 1px #e4e4e4;
+		padding:2rem 1rem;
+		color:black;
+	}
+	.his-box:hover{
+		background-color: var(--color-main-light);
+		color:var(--color-main);
+	}
+</style>
 {% if request.session.user %}
-
-{% for it in interviews.all %}
-<a href = "{%url 'result' it.id %}"><h3>{{it.created_at}}</h3></a>
-{% endfor %}
-
+<section class="history">
+	<h3 class="his-title">
+		면접 내역
+	</h3>
+	{% for it in interviews.all %}
+	<a href = "{%url 'result' it.id %}">
+		<div class="his-box">
+			<span style="font-size: 1.3rem; color:var(--color-main);">{{forloop.revcounter}}.</span>&nbsp;&nbsp;
+			<span style="font-size: 1.5rem;">{{it.created_at}}</span>
+		</div>
+	</a>
+	{% endfor %}
+</section>
 {% else %}
 <br><br>
 <h1>로그인을 해주세요</h1>

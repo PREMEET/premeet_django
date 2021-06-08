@@ -5,6 +5,7 @@ from django.http import HttpResponse, JsonResponse
 import os
 from pydub import AudioSegment
 from .voice import main
+import soundfile as sf
 
 # Create your views here.
 def home(request):
@@ -37,6 +38,7 @@ def result(request, itv_id):
 	try:
 		interview = get_object_or_404(Interview, id=itv_id)
 		results = Result.objects.filter(interview_id=interview)
+		res_data['interview']=interview
 		res_data['results'] = results
 	except:
 		redirect('home')
@@ -159,17 +161,45 @@ def next_question(request, res_id):
 
 	#오디오 추출
 	audio_url = extract_audio(video_url)
-	print(res_id)
-	print(audio_url)
-	print(res_id)
+	f = sf.SoundFile(audio_url)
+	
 	
 	result = get_object_or_404(Result, id=res_id)
+	result.audio_length = int((len(f) / f.samplerate))
+	result.top_time = int(request.POST.get('gaze_top'))
+	result.bottom_time = int(request.POST.get('gaze_bottom'))
+	result.left_time = int(request.POST.get('gaze_left'))
+	result.right_time = int(request.POST.get('gaze_right'))
+	result.normal_time = int(request.POST.get('gaze_center'))
+	result.positive_time = int(request.POST.get('face_positive'))
+	result.neutral_time = int(request.POST.get('face_neutral'))
+	
 	#추출한 오디오 모델에 돌리기(아직)
 	result.result_text = ""
 	res_jsons = main(audio_url)
 	for res in res_jsons:
-		print(res)
-		result.result_text += str(res.get('content'))
+		content = str(res.get('content'))
+		if(content.find('습관어') > 0):
+			if content.find('(어)') > 0:
+				result.result_text += ' (어) '
+				result.eo_count += 1
+				result.total_count += 1
+			if content.find('(음)') > 0:
+				result.result_text += ' (음) '
+				result.um_count += 1
+				result.total_count += 1
+			if content.find('(그)') > 0:
+				result.result_text += ' (그) '
+				result.geu_count += 1
+				result.total_count += 1
+		else:
+			if(content.find('침묵') > 0):
+				result.result_text += content
+				result.silence_time += int(content.rstrip('초)').lstrip('(침묵..'))
+			else:
+				result.result_text += content
+				result.total_count += len(content)
+			
 	#해당하는 result객체 가져와서 거기에 저장
 	
 	result.video_url = video_url

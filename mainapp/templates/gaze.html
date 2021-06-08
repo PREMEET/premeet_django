@@ -7,15 +7,34 @@
 	<title>Title</title>
 	<link rel="stylesheet" href="{% static 'css/base.css'%}" />
 	<link rel="stylesheet" href="{% static 'css/gaze.css'%}" />
+	<link rel="stylesheet" href="{% static 'css/animate.css' %}" />
 </head>
-
 <body>
 	<section class="alertpage background">
 		<h2>모의면접을 시작하기 전에<br>아래 유의사항을 확인해 주세요!</h2>
 		<div class="alert_container">
-			<div class="alert_box"></div>
-			<div class="alert_box"></div>
-			<div class="alert_box"></div>
+			<div class="alert_box">
+				<span>1</span>
+				<img src="{% static 'img/alert1.png' %}">
+				<div class="phrase">
+					원활한 영상 촬영을 위해 카메라와 눈높이를 맞추고,
+					얼굴이 화면의 정중앙에 오도록 조절해 주세요.
+				</div>
+			</div>
+			<div class="alert_box">
+				<span>2</span>
+				<img src="{% static 'img/alert2.png' %}">
+				<div class="phrase">
+					답변을 마치고 다음 질문으로 넘어가시려면 '다음 질문' 버튼을 클릭해주세요
+				</div>
+			</div>
+			<div class="alert_box">
+				<span>3</span>
+				<img src="{% static 'img/alert3.png' %}">
+				<div class="phrase">
+					결과분석까지 약 2분의 시간이 소요되며, 면접을 도중에 중단할 경우 면접 과정은 저장되지 않습니다.
+				</div>
+			</div>
 		</div>
 		<button class="btn" onclick="closeAlert()">확인했어요</button>
 		<!-- <div class="ocean">
@@ -26,73 +45,91 @@
 	<section class="loadpage background">
 		<div class="loader">
 			<div class="circle"></div>
+			<div class="js-loadphrase loadphrase"></div>
 		</div>
+		
 	</section>
 	<section class="interviewpage background">
-		{% for res in results.all %}
-		<div class="question" data-id="{{res.id}}" style="display:none">
-			<span>{{forloop.counter}} / {{result_num}} 번째 질문</span><br>
-			<span>{{res.question_id}}</span>
+		<div class="request-loader">
+			<div class="circle">
+				{% for res in results.all %}
+				<div class="question js-question" data-id="{{res.id}}">
+					{{forloop.counter}} / {{result_num}} 질문 : {{res.question_id}}
+				</div>
+				{% endfor %}
+				<span>이곳을 주목해주세요!</span>
+			</div>
 		</div>
-		{% endfor %}
+		<!-- <div class="js-wraper">
+			<div class="holder js-holder">
+				<div class="toggle"></div>
+			</div>
+		</div> -->
 		<div class="ques_alert_container">
 			<div><span id="ques_alert" style="color:red;"></span></div>
 			<div>x좌표 : <span id="ques_x"></span></div>
 			<div>y좌표 : <span id="ques_y"></span></div>
+			<div id="label-container"></div>
+			<div id="face_positive" style="display:none;">0</div>
+			<div id="face_neutral" style="display:none;">0</div>
 		</div>
-
-		<button class="btn" onclick="nextQuestion()">다음 질문</button>
-		
+		<div class="rec">REC</div>
+		<button class="btn js-next">다음 질문</button>
+		<div id="next2" style="display:none" onclick="nextQuestion2()"></div>
 	</section>
 	<script type="text/JavaScript" src="http://code.jquery.com/jquery-1.7.min.js"></script>
 	<script src="{% static 'js/webgazer.js' %}" defer></script>
 	<script src="{% static 'js/gaze.js' %}" type="text/javascript" defer></script>
 	<script>
 		let num = 0;
-		const questions = document.querySelectorAll('div.question');
+		let loadPhrase = document.querySelector('.js-loadphrase');
+		const questions = document.querySelectorAll('.js-question');
 		const question_num = Number("{{result_num}}");
 
-		function nextQuestion() {	
-			stopRecording();
-			document.querySelector('.loadpage').style.display = "block";
-			window.setTimeout(function () {
-				if (num + 1 < question_num){
-					downloadRecord(questions[num].dataset.id, "0");
-					window.setTimeout(function () {
-						document.querySelector('.loadpage').style.display = "none";
-						startRecording();
-						num += 1;
-						questions.forEach((question)=>{question.style.display="none";})
-						questions[num].style.display="block";
-					}, 2000);
-				}
-				else{
-					downloadRecord(questions[num].dataset.id, "{{itv_id}}")
-					// window.setTimeout(function () {
-					// 	locate();
-					// }, 5000);
-				}
-			}, 1000);
-			// if (parent.document.exitFullscreen)
-			// 	parent.document.exitFullscreen();
-			// else if (parent.document.webkitExitFullscreen)
-			// 	parent.document.webkitExitFullscreen();
-			// else if (parent.document.mozCancelFullScreen)
-			// 	parent.document.mozCancelFullScreen();
-			// else if (parent.document.msExitFullscreen)
-			// 	parent.document.msExitFullscreen();
+		function nextQuestion2(){
+			if (num + 1 < question_num){
+				document.querySelector('.loadpage').style.display = "none";
+				startRecording();
+				num += 1;
+				questions.forEach((question)=>{question.style.display="none";})
+				questions[num].style.display="block";
+			}
+			else{
+    			parent.document.location.href = "/result/{{itv_id}}";
+			}
 		}
 
-		function closeAlert() {
+		function nextQuestion(){	
+			stopRecording();
+			if (num + 1 < question_num)
+				loadPhrase.innerHTML = "다음 질문으로 넘어갑니다.";
+			else
+				loadPhrase.innerHTML = "고생하셨습니다!<br>면접을 분석하고 있습니다. 최대 1분만 기다려주세요.";
+			document.querySelector('.loadpage').style.display = "block";
+			window.setTimeout(function () {
+				downloadRecord(questions[num].dataset.id);
+			}, 500);
+		}
+
+		function closeAlert(){
 			const loader = document.querySelector('.loadpage');
 			document.querySelector('.alertpage').style.display = "none";
+			loadPhrase.innerHTML = "이제 곧 면접이 시작됩니다.";
 			startGazing();
+			// window.parent.document.querySelector('.js-click').click();
 			window.setTimeout(function () {
 				loader.style.display = "none";
 				startRecording();
 				questions[num].style.display="block";
-			}, 5000);
+			}, 10000);
 			return;
+		}
+
+		window.onload = () => {
+			const nextQues = document.querySelector('.js-next');
+			nextQues.addEventListener('click',nextQuestion);
+			// const wraper = document.querySelector('.js-wraper');
+			// new Togglebutton(wraper,'js-holder','toggle','on');
 		}
 	</script>
 </body>

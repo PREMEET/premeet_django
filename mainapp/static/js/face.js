@@ -3,6 +3,8 @@
 
 // the link to your model provided by Teachable Machine export panel
 
+const positive = window.frames[0].document.getElementById("face_positive")
+const neutral = window.frames[0].document.getElementById("face_neutral")
 
 let model, webcam, labelContainer, maxPredictions;
 
@@ -18,28 +20,24 @@ async function initface() {
 	// or files from your local hard drive
 	// Note: the pose library adds "tmImage" object to your window (window.tmImage)
 	model = await tmImage.load(modelURL, metadataURL);
-	maxPredictions = model.getTotalClasses();
+	maxPredictions = 2;
 
 	// Convenience function to setup a webcam
 	const flip = true; // whether to flip the webcam
 	webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
 	await webcam.setup(); // request access to the webcam
 	await webcam.play();
-	window.requestAnimationFrame(loop);
+	loop();
 
 	// append elements to the DOM
-	
-	document.getElementById("webcam-container").appendChild(webcam.canvas);
-	labelContainer = document.getElementById("label-container");
-	for (let i = 0; i < maxPredictions; i++) { // and class labels
-		labelContainer.appendChild(document.createElement("div"));
-	}
+	labelContainer = window.frames[0].document.getElementById("label-container");
+	labelContainer.appendChild(document.createElement("div"));
+	labelContainer.appendChild(document.createElement("div"));
 }
 
 async function loop() {
 	webcam.update(); // update the webcam frame
 	await predict();
-	window.requestAnimationFrame(loop);
 }
 
 // run the webcam image through the image model
@@ -50,6 +48,11 @@ async function predict() {
 		const classPrediction =
 			prediction[i].className + ": " + prediction[i].probability.toFixed(2);
 		labelContainer.childNodes[i].innerHTML = classPrediction;
+	}
+	if (prediction[0].probability > prediction[1].probability)
+		positive.innerText = Number(positive.innerText) + 1;
+	else{
+		neutral.innerText = Number(neutral.innerText) + 1;
 	}
 }
 

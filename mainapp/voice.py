@@ -204,9 +204,14 @@ def STT_with_json(audio_file, jsons):
       except:
         if unrecognizable_start == 0:
           unrecognizable_start = json['start']
-
-  statistics_filler_json.append({'어':filler_1, '음':filler_2, '그':filler_3})
-  statistics_silence_json.append({'통역개시지연시간':100 * first_silence_interval/audio_total_length, '침묵시간':100 * silence_interval/audio_total_length, '발화시간':100 * (audio_total_length - first_silence - silence_interval)/audio_total_length})
+  try :
+    statistics_filler_json.append({'어':filler_1, '음':filler_2, '그':filler_3})
+  except:
+    pass
+  try :
+    statistics_silence_json.append({'통역개시지연시간':100 * first_silence_interval/audio_total_length, '침묵시간':100 * silence_interval/audio_total_length, '발화시간':100 * (audio_total_length - first_silence - silence_interval)/audio_total_length})
+  except:
+    pass
   return transcript_json, statistics_filler_json, statistics_silence_json
 
 def make_transcript(audio_file_path):
