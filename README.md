@@ -39,7 +39,7 @@ $ python manage.py migrate
 $ python manage.py runserver
 ```
 
-### 6.질문 데이터 추가
+### 7.질문 데이터 추가
 
 url에 /add_all_data
 
