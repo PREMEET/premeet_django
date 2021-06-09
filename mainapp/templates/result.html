@@ -5,24 +5,24 @@
 {% if request.session.user %}
 {% load static %}
 <link rel="stylesheet" href="{%static 'css/result.css'%}"/>
-<section class="result">
+<section id="result">
 	<br><br>
 	<span style="margin:3rem;">{{interview.created_at}}</span>
 	<h2 class="res-header">최종 결과</h2>
 	<div class="score-box">
 		<div class="score-board">
-			<div class="score chart" data-size="150" data-value="73" data-arrow="down"></div>
+			<div id ="score" class="score chart" data-size="150" data-value="73" data-arrow="down"></div>
 		</div>
 		<div class="score-text">
-			<span>시선처리 : <span class="highlight">18</span>/25점</span>
-			<span>표정 : <span class="highlight">15</span>/25점</span>
-			<span>말하기 습관 : <span class="highlight">21</span>/25점</span>
-			<span>말하기 속도 : <span class="highlight">19</span>/25점</span>
+			<span>시선처리 : <span data-text="시선처리" class="highlight js-score">18</span>/25점</span>
+			<span>표정 : <span data-text="표정" class="highlight js-score">15</span>/25점</span>
+			<span>말하기 습관 : <span data-text="말하기 습관" class="highlight js-score">21</span>/25점</span>
+			<span>말하기 속도 : <span data-text="말하기 속도" class="highlight js-score">19</span>/25점</span>
 		</div>
 	</div>
-	<div class="res-text">"말하기 속도, 침묵 관련 뭐라할지"</div>
+	<div class="res-text js-score_mention">"최종 결과 뭐라할지"</div>
 </section>
-<div class="js-wrapper"> 
+<div id="root"> 
 {% for res in results.all %}
 <section class="result js-resContainer">
 	<h2 class="result-header js-item toggle">질문 {{forloop.counter}} &nbsp;&nbsp; <span>{{res.question_id}}</span></h2><br>
@@ -39,7 +39,7 @@
 				<span>{{res.result_text}}</span>
 			</div>
 		</div>
-		<div class="res-text">"말하기 속도, 침묵 관련 뭐라할지"</div>
+		<div class="res-text js-mention">"침묵 관련 뭐라할지"</div>
 
 		<br/>
 		<h3 class="res-title">음성 분석</h3>
@@ -48,28 +48,29 @@
 				<h4 class="voice-title">말하기 속도</h4>
 				<div class="voice-speech">
 					<span>1분당</span>
-					<span class="js-res" data-time="{{res.audio_length}}" data-count="{{res.total_count}}">{{res.total_count}}</span>
+					<span class="js-res" data-time="{{res.audio_length}}" data-count="{{res.total_count}}" data-silence="{{res.silence_time}}"></span>
 				</div>
 			</div>
 			<div class="voice-box2 js-resBox">
 				<h4 class="voice-title">습관어 횟수</h4>
 				<div class="voice-graph">
-					<div class="js-res voice-data" data-time="{{res.um_count}}">
+					<div class="js-res voice-data" data-title="um" data-time="{{res.um_count}}">
 						<span class="js-resCount"></span>
 						<span>음</span>
 					</div>
-					<div class="js-res voice-data" data-time="{{res.geu_count}}">
+					<div class="js-res voice-data" data-title="geu" data-time="{{res.geu_count}}">
 						<span class="js-resCount"></span>
 						<span>그</span>
 					</div>
-					<div class="js-res voice-data" data-time="{{res.eo_count}}">
+					<div class="js-res voice-data" data-title="eo" data-time="{{res.eo_count}}">
 						<span class="js-resCount"></span>
 						<span>어</span>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="res-text">"습관어 횟수 관련 뭐라할지"</div>
+		<div class="res-text js-mention">"말하기 속도 뭐라할지"</div>
+		<div class="res-text js-mention">"습관어 횟수 관련 뭐라할지"</div>
 		<br/>
 		
 		<h3 class="res-title">표정 분석</h3>
@@ -77,31 +78,31 @@
 			<div class="img-box">
 				<span class="img-span">긍정적</span>
 				<img src="{% static 'img/face-positive.png' %}" alt="img"/>	
-				<span class="js-res face-span" data-time="{{res.positive_time}}"></span>
+				<span class="js-res face-span" data-title="positive" data-time="{{res.positive_time}}"></span>
 			</div>
 			<div class="img-box">
 				<span class="img-span">무표정</span>
 				<img src="{% static 'img/face-neutral.png' %}" alt="img"/>
-				<span class="js-res face-span" data-time="{{res.neutral_time}}"></span>
+				<span class="js-res face-span" data-title="neutral" data-time="{{res.neutral_time}}"></span>
 			</div>
 			
 		</div>
-		<div class="res-text">"표정 분석 관련 뭐라할지"</div>
+		<div class="res-text js-mention">"표정 분석 관련 뭐라할지"</div>
 		<br/>
 
 		<h3 class="res-title">시선 분석</h3>
 		<div class="res-box js-resBox gaze-box">
-			<span class="js-res gaze-span" data-time="{{res.top_time}}"></span>
-			<span class="js-res gaze-span" data-time="{{res.bottom_time}}"></span>
-			<span class="js-res gaze-span" data-time="{{res.left_time}}"></span>
-			<span class="js-res gaze-span" data-time="{{res.right_time}}"></span>
-			<span class="js-res gaze-span" data-time="{{res.normal_time}}"></span>
+			<span class="js-res gaze-span" data-title="top" data-time="{{res.top_time}}"></span>
+			<span class="js-res gaze-span" data-title="bottom" data-time="{{res.bottom_time}}"></span>
+			<span class="js-res gaze-span" data-title="left" data-time="{{res.left_time}}"></span>
+			<span class="js-res gaze-span" data-title="right" data-time="{{res.right_time}}"></span>
+			<span class="js-res gaze-span" data-title="normal" data-time="{{res.normal_time}}"></span>
 			<div class="img-box">
 				<img src="{% static 'img/gaze-dash.png' %}" alt="img"/>	
 				<img src="{% static 'img/gaze-human.png' %}" alt="img"/>
 			</div>
 		</div>
-		<div class="res-text">"시선 분석 관련 뭐라할지"</div>
+		<div class="res-text js-mention">"시선 분석 관련 뭐라할지"</div>
 		<br/>
 	</article>
 </section>
@@ -113,6 +114,5 @@
 <br><br>
 <h1>로그인을 해주세요</h1>
 {% endif %}
-<script type="text/JavaScript" src="{% static 'js/result.js'%}"></script>
-<script type="text/JavaScript" src="{% static 'js/resultAnimate.js'%}"></script>
+<script type="module" src="{% static 'js/ResultApp.js'%}"></script>
 {% endblock %}
