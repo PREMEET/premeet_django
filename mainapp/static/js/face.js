@@ -3,9 +3,6 @@
 
 // the link to your model provided by Teachable Machine export panel
 
-const positive = window.frames[0].document.getElementById("face_positive")
-const neutral = window.frames[0].document.getElementById("face_neutral")
-
 let model, webcam, labelContainer, maxPredictions;
 
 // Load the image model and setup the webcam
@@ -43,12 +40,15 @@ async function loop() {
 // run the webcam image through the image model
 async function predict() {
 	// predict can take in an image, video or canvas html element
+	const positive = window.frames[0].document.getElementById("face_positive");
+	const neutral = window.frames[0].document.getElementById("face_neutral");
 	const prediction = await model.predict(webcam.canvas);
 	for (let i = 0; i < maxPredictions; i++) {
 		const classPrediction =
 			prediction[i].className + ": " + prediction[i].probability.toFixed(2);
 		labelContainer.childNodes[i].innerHTML = classPrediction;
 	}
+	window.frames[0].console.log("dd");
 	if (prediction[0].probability > prediction[1].probability)
 		positive.innerText = Number(positive.innerText) + 1;
 	else{

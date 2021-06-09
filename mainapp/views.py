@@ -195,7 +195,7 @@ def next_question(request, res_id):
 		else:
 			if(content.find('침묵') > 0):
 				result.result_text += content
-				result.silence_time += int(content.rstrip('초)').lstrip('(침묵..'))
+				result.silence_time += int(content.rstrip('초)').lstrip('(침묵..').replace(".",""))
 			else:
 				result.result_text += content
 				result.total_count += len(content)

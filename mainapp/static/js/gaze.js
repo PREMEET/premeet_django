@@ -10,8 +10,6 @@ let gaze_right = 0;
 let gaze_center = 0;
 let gaze_bottom = 0;
 let gaze_top = 0;
-let face_positive = 0;
-let face_neutral = 0;
 
 // labelContainer = window.frames[0].document.getElementById("label-container");
 // labelContainer.appendChild(document.createElement("div"));
@@ -26,11 +24,12 @@ function startGazing() {
     webgazer.setRegression('ridge').setTracker('clmtrackr').setGazeListener((data, timestamp) => {
         webcam_click.click();
         if (data === null) {
-            /*처음 클릭 안하면 data가 NULL이기 때문에 좋료방지*/
-            return;
-        }
+                /*처음 클릭 안하면 data가 NULL이기 때문에 좋료방지*/
+                return;
+            }
         ques_x.innerHTML = data.x.toFixed(3);
         ques_y.innerHTML = data.y.toFixed(3);
+        
         if (data.x < LEFT_CUTOFF && lookDirection !== "LEFT") {
             startLookTime = timestamp;
             lookDirection = 'LEFT';
@@ -127,6 +126,7 @@ function startRecording() {
 }
 
 function stopRecording() {
+    webgazer.pause();
     mediaRecorder.stop();
     webgazer.showPredictionPoints(false);
 }
@@ -143,7 +143,6 @@ function downloadRecord(id) {
 }
 
 function uploadToServer(blob,id,url) {
-    console.log()
     let face_positive = document.getElementById('face_positive');
     let face_neutral = document.getElementById('face_neutral');
     let fd = new FormData(window.parent.document.getElementById("form"));
@@ -155,7 +154,6 @@ function uploadToServer(blob,id,url) {
     fd.append('gaze_left', gaze_left);
     fd.append('gaze_right', gaze_right);
     fd.append('gaze_center', gaze_center);
-    console.log(gaze_top);
     console.log(blob);
     $.ajax({
         url: "/next_question/"+id,
@@ -165,14 +163,15 @@ function uploadToServer(blob,id,url) {
         contentType: false,
         success : function (response) {
             console.log(response);
+            webgazer.resume();
             next_ques2.click();
             gaze_top = 0;
             gaze_bottom = 0;
             gaze_left = 0;
             gaze_right = 0;
             gaze_center = 0;
-            face_neutral.innerText="0";
-            face_positive.innerText="0";
+            face_neutral.innerText="1";
+            face_positive.innerText="1";
         },
         error: function (jqXHR, textStaut, errorMesssage) {
             alert('Error' + JSON.stringify(errorMesssage));

@@ -14,7 +14,45 @@
 	font-size: 1.8rem;
 	position: relative;
 }
+/*score*/
+.score-box{
+	margin:2rem auto;
+	width:95%;
+	max-width: 700px;
+	background-color: white;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px 1px #e4e4e4;
+	padding:3rem 1rem 4rem;
+	display: flex;
+	justify-content: space-around;
+}
+.score-board {
+	position: relative;
+	width: 55%;
+	height: auto;
+	margin: auto;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	display: flex;
+	justify-content: center;
+}
+.score {
+	font: 1px;
+	padding: 0 20px;
+}
+.score-text{
+	padding:1rem;
+	width: 45%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	font-size: 1.2rem;
+	font-weight: 500;
+}
 
+/*질문당 결과*/
 .result-header{
 	background-color: var(--color-dark);
 	padding:1.5rem;
@@ -47,8 +85,16 @@
 	display:block;
 }
 
-
-
+.res-text{
+	text-align: center; 
+	padding:1rem;
+	font-size: 3rem;
+	margin-top:1rem;
+	margin-bottom:3rem;
+	font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+	color:var(--color-dark);
+	opacity: 0.9;
+}
 
 
 .result-article{
@@ -66,11 +112,44 @@
 	background-color: white;
 	border-radius: 5px;
 	box-shadow: 0 2px 5px 1px #e4e4e4;
-	padding:3rem 1rem;
+	padding:3rem 1rem 4rem;
 	display: flex;
 	justify-content: space-around;
 }
 
+
+
+/*영상분석*/
+
+.video_container{
+	display:flex;
+	position: relative;
+}
+.video_container>video{
+	width:45%;
+}
+
+.video_container>.text_box{
+	width:55%;
+	padding: 0.5rem 3rem;
+	overflow: scroll;
+	font-size: 1.3rem;
+}
+.video_container .total_count{
+	position :absolute;
+	display: flex;
+	justify-content: space-around;
+	transform: translate(-50%,0);
+	font-weight: 700;
+	left:50%;
+	width:55%;
+	bottom:1rem;
+	font-size: 1.2rem;
+}
+
+
+
+/*음성분석*/
 .voice-title{
 	text-align: center; 
 	padding:0;
@@ -152,23 +231,6 @@
 
 
 
-
-
-
-
-
-.video_container{
-	display:flex;
-}
-.video_container>video{
-	width:45%;
-}
-
-.video_container>.text_box{
-	width:55%;
-	padding: 0.5rem 3rem;
-	overflow: scroll;
-}
 .face-box{
 	margin:5rem auto;
 	width:80%;
@@ -178,11 +240,8 @@
 	display: flex;
 	padding:0 5rem;
 	justify-content: space-around;
-	height:9rem;
+	height:8rem;
 }
-
-
-
 
 /*img-box*/
 .img-box{
@@ -201,7 +260,7 @@
 }
 .face-box .img-box .img-span{
 	font-size: 1.1rem;
-	top:-3.5rem;
+	top:-5rem;
 }
 .face-box .img-box .face-span{
 	font-size: 1.5rem;
@@ -243,7 +302,7 @@
 	color:white;
 	z-index: 1;
 	opacity: 0.8;
-	font-size: 1.5rem;
+	font-size: 2.1rem;
 }
 .gaze-span:nth-child(1){
 	/*위*/

@@ -70,8 +70,8 @@
 			<div>x좌표 : <span id="ques_x"></span></div>
 			<div>y좌표 : <span id="ques_y"></span></div>
 			<div id="label-container"></div>
-			<div id="face_positive" style="display:none;">0</div>
-			<div id="face_neutral" style="display:none;">0</div>
+			<div id="face_positive" style="display:none;">1</div>
+			<div id="face_neutral" style="display:none;">1</div>
 		</div>
 		<div class="rec">REC</div>
 		<button class="btn js-next">다음 질문</button>
@@ -104,7 +104,7 @@
 			if (num + 1 < question_num)
 				loadPhrase.innerHTML = "다음 질문으로 넘어갑니다.";
 			else
-				loadPhrase.innerHTML = "고생하셨습니다!<br>면접을 분석하고 있습니다. 최대 1분만 기다려주세요.";
+				loadPhrase.innerHTML = "고생하셨습니다!<br>면접을 분석하고 있습니다. 최대 2분만 기다려주세요.";
 			document.querySelector('.loadpage').style.display = "block";
 			window.setTimeout(function () {
 				downloadRecord(questions[num].dataset.id);
@@ -121,7 +121,7 @@
 				loader.style.display = "none";
 				startRecording();
 				questions[num].style.display="block";
-			}, 10000);
+			}, 7000);
 			return;
 		}
 
