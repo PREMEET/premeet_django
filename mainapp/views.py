@@ -206,3 +206,35 @@ def next_question(request, res_id):
 	result.save()
 	
 	return HttpResponse(status=200)
+
+
+
+def result_data(req):
+	res_data=[]
+	# try:
+	interview = get_object_or_404(Interview, id=req.GET['id'])
+	results = Result.objects.filter(interview_id=interview)
+	for result in results:
+		data={
+			'face':{
+				'positive_time':result.positive_time,
+				'neutral_time':result.neutral_time,
+			},
+			'gaze':{
+				'right_time':result.right_time,
+				'left_time':result.left_time,
+				'bottom_time':result.bottom_time,
+				'top_time':result.top_time,
+				'normal_time':result.normal_time,
+			},
+			'voice':{
+				'audio_length':result.audio_length,
+				'silence_time':result.silence_time,
+				'result_text':result.result_text,
+				'um_count':result.um_count,
+				'eo_count':result.eo_count,
+				'geu_count':result.geu_count
+			}
+		}
+		res_data.append(data)
+	return JsonResponse({'count':len(res_data),'data': res_data})
